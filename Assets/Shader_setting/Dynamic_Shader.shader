@@ -77,6 +77,8 @@ Shader "CustomRenderTexture/Dynamic_Shader"
                 // 텍스처의 기본 배경색
                 half4 bgColor = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, i.uv);
 
+                bgColor = _Color;
+
                 // 원 중심을 기준으로 좌표 변환 (행렬 연산)
                 half2 centeredUV = i.uv - _CircleCenter;
 
@@ -92,6 +94,10 @@ Shader "CustomRenderTexture/Dynamic_Shader"
                 
                 for (int j = 0; j < _CircleCount; j++) {
                     circles cir = _Circles[j];
+
+                    if (cir.CircleColor.w == 0) {
+                        continue;
+                    }
 
                     half2 centeredUV2 = i.uv - cir.CirclePosition;
                     half dist2 = length(centeredUV2);

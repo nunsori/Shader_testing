@@ -1,6 +1,10 @@
 
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -39,7 +43,12 @@ public class TouchSpreadEffect : MonoBehaviour
 
 
     [Header("Dynamic Shader Settings")]
-    Circle_info[] Circles = new Circle_info[10];
+    List<Circle_info> Circles = new List<Circle_info>();
+    
+
+    private Circle_info temp_cir = new Circle_info();
+    //Circle_info[] Circles;
+    //bool[] is_on = { false, false, false, false, false, false, false, false, false, false };
     public Color randColor = Color.white;
 
     Vector4[] vec4s = {
@@ -51,6 +60,7 @@ public class TouchSpreadEffect : MonoBehaviour
     Vector2 temp_vec2 = Vector2.zero;
 
     private int touchCount = 0;
+    private int countiung = 0;
 
     void Start()
     {
@@ -62,19 +72,14 @@ public class TouchSpreadEffect : MonoBehaviour
             
         }
 
-        for(int i = 0; i<Circles.Length; i++)
-        {
-            Circles[i].CirclePosition = new Vector2(0.5f, 0.5f);
-            Circles[i].CircleColor = new Vector4(0, 0, 1f, 0);
-            Circles[i].CircleRadius = 0.5f;
+        
 
-        }
-
-        Debug.Log(materialInstance);
+        //Debug.Log(materialInstance);
         touchCount = 0;
+        countiung = 0;
 
         // 초기 셰이더 속성 설정
-        UpdateShaderProperties();
+        //UpdateShaderProperties();
     }
 
     void Update()
@@ -82,8 +87,13 @@ public class TouchSpreadEffect : MonoBehaviour
         // 터치 입력 감지
         if (Input.GetMouseButtonDown(0))
         {
+            //if(touchCount >= 10)
+            //{
+                //return;
+            //
+            //}
             Vector2 screenPosition = Input.mousePosition;
-            Debug.Log(screenPosition);
+            //Debug.Log(screenPosition);
             RectTransformUtility.ScreenPointToLocalPointInRectangle(
                 targetImage.rectTransform,
                 screenPosition,
@@ -98,31 +108,65 @@ public class TouchSpreadEffect : MonoBehaviour
                 (localPoint.y - rect.y) / rect.height
             );
 
-            Debug.Log(touchPosition);
+            //Debug.Log(touchPosition);
             temp_vec2.x = touchPosition.x;
             temp_vec2.y = touchPosition.y;
-            Circles[0].CirclePosition = temp_vec2;
-            Circles[0].CircleRadius = 0f;
-            Circles[0].CircleColor = vec4s[touchCount % 3];
+            temp_cir.CirclePosition = temp_vec2;
+            temp_cir.CircleRadius = 0f;
+            temp_cir.CircleColor = vec4s[touchCount % 3];
+
+            Circles.Add(temp_cir);
+            
+            
+            //is_on[touchCount] = true;
             
 
             spreadRadius = 0.0f; // 반경 초기화
             spreading = true;    // 퍼짐 시작
+            touchCount++;
+            countiung++;
+            UnityEngine.Debug.Log(countiung);
+            UnityEngine.Debug.Log(Circles.Count);
         }
 
         // 퍼짐 효과 적용
-        if (spreading)
+        if (countiung > 0)
         {
             spreadRadius += Time.deltaTime * 0.5f; // 퍼짐 속도 조절
-            Circles[0].CircleRadius += Time.deltaTime * 0.5f;
-            if (spreadRadius > 1.5f) // 반경이 일정 이상 커지면 멈춤
+            if (!(Circles.Count != 0)) return;
+            
+            for(int j = Circles.Count - 1; j >= 0; j--)
             {
-                spreading = false;
+                
+                if (Circles[j].CircleRadius > 1.5f)
+                {
+                    materialInstance.SetColor("_Color", Circles[j].CircleColor);
+                    Circles.RemoveAt(j);
+                    
+                    countiung--;
+                    UnityEngine.Debug.Log(countiung);
+                    if (countiung == 0) return;
+                    continue;
+                }
+                else
+                {
+                    //이거 바꿔야됨... 값복사 너무 많이 일어남
+                    temp_cir = Circles[j];
+                    temp_cir.CircleRadius += (float)Time.deltaTime * 0.5f;
+                    Circles[j] = temp_cir;
+                }
+
+
+                
             }
+
+            
 
             UpdateShaderProperties();
         }
     }
+
+    
 
     private void UpdateShaderProperties()
     {
@@ -134,12 +178,13 @@ public class TouchSpreadEffect : MonoBehaviour
             //materialInstance.SetFloat("_Tolerance", tolerance);
             //materialInstance.SetVector("_TouchPosition", touchPosition);
             //materialInstance.SetFloat("_SpreadRadius", spreadRadius);
-            ComputeBuffer circlebuffer = new ComputeBuffer(Circles.Length, System.Runtime.InteropServices.Marshal.SizeOf(typeof(Circle_info)));
-            circlebuffer.SetData(Circles);
+            ComputeBuffer circlebuffer = new ComputeBuffer(Circles.Count, System.Runtime.InteropServices.Marshal.SizeOf(typeof(Circle_info)));
+            circlebuffer.SetData(Circles.ToArray());
 
             materialInstance.SetBuffer("_Circles", circlebuffer);
-            Debug.Log("updating");
-            Debug.Log(Circles[0].CirclePosition);
+            materialInstance.SetFloat("_CircleCount", Circles.Count);
+            
+            
 
             //materialInstance.ma
         }

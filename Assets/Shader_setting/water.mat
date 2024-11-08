@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: New Material
-  m_Shader: {fileID: 4800000, guid: ef6fbcbb66ce48341be3bd78bf1809fb, type: 3}
+  m_Name: water
+  m_Shader: {fileID: 4800000, guid: c659c640eae438448ba75f961bd621b0, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -28,7 +28,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 10309, guid: 0000000000000000f000000000000000, type: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MaskTex:
@@ -41,31 +41,20 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _CircleCount: 10
-    - _CircleRadius: 0.25
-    - _CircleRadius2: 0.25
     - _EnableExternalAlpha: 0
-    - _LightIntensity: 0.5
-    - _LightMode: 1
-    - _LightRadius: 0.3
-    - _SpreadRadius: 0
-    - _Tolerance: 0.1
+    - _LargeWaveHeight: 1
+    - _SmallWaveHeight: 1
+    - _Time: 0
+    - _WaterLevel: 70
+    - _WaveGain: 1
     - _ZWrite: 0
     m_Colors:
-    - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
-    - _CircleCenter: {r: 0.5, g: 0.5, b: 0, a: 0}
-    - _CircleCenter2: {r: 0.7, g: 0.5, b: 0, a: 0}
-    - _CircleColor: {r: 1, g: 0, b: 0, a: 1}
-    - _CircleColor2: {r: 0, g: 0, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _LightCenter: {r: 0.5, g: 0.5, b: 0, a: 1}
-    - _LightColor: {r: 0, g: 0.046190023, b: 1, a: 1}
-    - _LightColorDay: {r: 1, g: 0.5, b: 0.5, a: 1}
-    - _LightColorNight: {r: 0.5, g: 0.5, b: 1, a: 1}
-    - _LightDirection: {r: 0, g: 0, b: -1, a: 0}
+    - _FogColor: {r: 0.3404634, g: 0.4766488, b: 0.7490196, a: 1}
+    - _LightDirection: {r: 0.1, g: 0.25, b: 0.9, a: 1}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
-    - _ReplaceColor: {r: 0, g: 1, b: 0, a: 1}
-    - _TargetColor: {r: 1, g: 0, b: 0, a: 1}
-    - _TouchPosition: {r: 0.5, g: 0.5, b: 0, a: 0}
+    - _Resolution: {r: 1, g: 1, b: 1, a: 1}
+    - _SkyBottom: {r: 0.4716981, g: 0.3003738, b: 0.30751228, a: 1}
+    - _SkyTop: {r: 1, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
